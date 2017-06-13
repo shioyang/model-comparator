@@ -2,6 +2,9 @@
 data
 data2
 
+# Memo
+memo.txt
+
 ########## Generated ##########
 # Byte-compiled / optimized / DLL files
 __pycache__/
