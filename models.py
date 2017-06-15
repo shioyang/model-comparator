@@ -7,11 +7,13 @@ from keras.layers import Activation
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 
+debug = True
+debug_roop = 100
 
 num_classes = 10
 
 # input image dimensions
-img_rows, img_cols = 124, 124
+img_rows, img_cols = 128, 128
 input_shape = (img_rows, img_cols, 1)
 # input_shape = (1, img_rows, img_cols)
 
@@ -53,29 +55,27 @@ def load_data(mat_file_dir):
     genders   = meta["gender"]
  
     for i, path in enumerate(img_paths):
-        print('i:', i)
-        if i == 1:
-            continue
-        if i == 3:
-            continue
-        if i == 10:
-            continue
-        if i == 16:
-            continue
+        if debug:
+            print('i:', i)
+
         absPath = data_dir + '/' + path.strip()
-        print('loading:', absPath)
+        if debug:
+            print('loading:', absPath)
+            print('gender:', genders[0][i])
+
         img = load_img(absPath, target_size=(img_rows, img_cols))
         x_img.append( img_to_array(img) )
 
-        print('gender:', genders[0][i])
         y_gender.append( genders[0][i] )
+
+        if debug and (i > debug_roop):
+            break
 
     return np.array(x_img), np.array(y_gender)
 
+
 # model = create_model()
 # print(model)
-
-# meta = loadmat('modified_wiki.mat')
 
 x, y = load_data('modified_wiki.mat')
 print('x:', x)
