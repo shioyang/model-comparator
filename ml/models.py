@@ -115,7 +115,7 @@ callbacks = [tb_callback]
 ###
 
 
-model.fit(x, y, batch_size=32, epochs=10,
+model.fit(x, y, batch_size=32, epochs=10, validation_split=0.2,
              callbacks=callbacks ) # for TensorBoard
 
 
