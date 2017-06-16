@@ -9,7 +9,7 @@ from keras.layers import Conv2D, MaxPooling2D
 from keras.utils.np_utils import to_categorical
 
 debug = True
-debug_roop = 100
+debug_roop = 2000
 debug_verbose = False
 
 num_classes = 2
@@ -20,6 +20,17 @@ input_shape = (img_rows, img_cols, 3)
 # input_shape = (3, img_rows, img_cols)
 
 data_dir = 'data'
+
+
+### For TensorBoard
+from keras.backend import tensorflow_backend
+import tensorflow as tf
+log_dir = './tflog/'
+old_session = tensorflow_backend.get_session()
+session = tf.Session()
+tensorflow_backend.set_session(session)
+tensorflow_backend.set_learning_phase(1)
+###
 
 
 def create_model():
@@ -38,15 +49,15 @@ def create_model():
     model.add(Dense(128, activation='relu'))
     model.add(Dropout(0.5))
     model.add(Dense(num_classes, activation='softmax'))
-    
+
     model.compile(loss=keras.losses.categorical_crossentropy,
                     optimizer=keras.optimizers.Adadelta(),
                     metrics=['accuracy'])
-    
+
     # model.compile(loss='categorical_crossentropy',
     #           optimizer='adam',
     #           metrics=['accuracy'])
-    
+
     return model
 
 
@@ -98,6 +109,20 @@ if debug and debug_verbose:
 # Alternatively, you can use the loss function `sparse_categorical_crossentropy` instead, which does expect integer targets.
 y = to_categorical(y)
 
-model.fit(x, y, batch_size=32, epochs=5)
+### For TensorBoard
+tb_callback = keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+callbacks = [tb_callback]
+###
+
+
+model.fit(x, y, batch_size=32, epochs=10,
+             callbacks=callbacks ) # for TensorBoard
+
 
 model.save('trained_model.h5')
+
+
+### For TensorBoard
+tensorflow_backend.set_session(old_session)
+###
+
