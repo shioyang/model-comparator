@@ -2,7 +2,6 @@ import numpy as np
 import argparse
 from keras.models import load_model
 from keras.preprocessing.image import load_img, img_to_array
-from keras.backend import tensorflow_backend
 
 ### Configuration
 img_rows, img_cols = 128, 128
