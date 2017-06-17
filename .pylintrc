@@ -69,6 +69,8 @@ disable=print-statement,parameter-unpacking,unpacking-in-except,old-raise-syntax
 C0111,  # missing docstring
 C0326   # multiple spaces
 
+# Ref: http://pylint-messages.wikidot.com/all-codes
+
 
 [REPORTS]
 
