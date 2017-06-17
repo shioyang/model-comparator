@@ -3,6 +3,9 @@ data
 data2
 test_*.jpg
 
+# Models
+*.h5
+
 # Memo
 memo.txt
 
