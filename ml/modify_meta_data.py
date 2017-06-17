@@ -1,7 +1,6 @@
-import numpy as np
 from os.path import isfile
 from scipy.io import loadmat, savemat
-from keras.preprocessing.image import load_img, list_pictures, img_to_array
+import numpy as np
 
 
 def load_label(data_path_file):
@@ -39,14 +38,9 @@ def load_img_label_asarray(data_dir, ext):
         #     continue
         full_paths.append( full_path[0] )
         genders.append( gender )
-        # print(name, full_path, gender, face_score, second_face_score)
 
     savemat('modified_wiki.mat', { "full_path": np.array(full_paths), "gender": np.array(genders) })
 
 
-# load_label('data2/wiki.mat')
+### Modify wiki.mat and create a modified mat file. TODO: Change the function name
 load_img_label_asarray('data', 'jpg')
-
-# X = load_img_asarray('data', 'jpg')
-# print(X)
-
