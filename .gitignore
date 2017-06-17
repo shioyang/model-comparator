@@ -42,5 +42,10 @@ testem.log
 .DS_Store
 Thumbs.db
 
+
+### Backups
+*.back
+*.backup
+
 ### Memo
 memo.txt
