@@ -14,7 +14,7 @@ debug_verbose = False
 
 num_classes = 2
 
-# input image dimensions
+### input image dimensions
 img_rows, img_cols = 128, 128
 input_shape = (img_rows, img_cols, 3)
 # input_shape = (3, img_rows, img_cols)
@@ -39,16 +39,16 @@ def create_model():
 
     # input: (img_rows x img_cols) images with 3 channels -> (img_rows, img_cols, 3) tensors.
     # this applies 32 convolution filters of size 3x3 each.
-    model.add(Conv2D(32, kernel_size=(3, 3),
-                 activation='relu',
-                 input_shape=input_shape))
-    model.add(Conv2D(64, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.25))
-    model.add(Flatten())
-    model.add(Dense(128, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(num_classes, activation='softmax'))
+    model.add( Conv2D(32, kernel_size=(3, 3),               # Output Shape           Param #
+                  activation='relu',                        # -------------------------------
+                  input_shape=input_shape) )                # (None, 126, 126, 32)       896
+    model.add( Conv2D(64, (3, 3), activation='relu') )      # (None, 124, 124, 64)     18496
+    model.add( MaxPooling2D(pool_size=(2, 2)) )             # (None,  62,  62, 64)         0
+    model.add( Dropout(0.25) )                              # (None,  62,  62, 64)         0
+    model.add( Flatten() )                                  # (None, 246016)               0
+    model.add( Dense(128, activation='relu') )              # (None,    128)        31490176
+    model.add( Dropout(0.5) )                               # (None,    128)               0
+    model.add( Dense(num_classes, activation='softmax') )   # (None,      2)             258
 
     model.compile(loss=keras.losses.categorical_crossentropy,
                     optimizer=keras.optimizers.Adadelta(),
@@ -109,6 +109,7 @@ if debug and debug_verbose:
 # Alternatively, you can use the loss function `sparse_categorical_crossentropy` instead, which does expect integer targets.
 y = to_categorical(y)
 
+
 ### For TensorBoard
 tb_callback = keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
 callbacks = [tb_callback]
@@ -118,11 +119,9 @@ callbacks = [tb_callback]
 model.fit(x, y, batch_size=32, epochs=10, validation_split=0.2,
              callbacks=callbacks ) # for TensorBoard
 
-
 model.save('trained_model.h5')
 
 
 ### For TensorBoard
 tensorflow_backend.set_session(old_session)
 ###
-
