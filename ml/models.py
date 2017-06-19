@@ -108,8 +108,13 @@ if debug and debug_verbose:
 # ```
 # 
 # Alternatively, you can use the loss function `sparse_categorical_crossentropy` instead, which does expect integer targets.
-y = to_categorical(y)
+y = to_categorical(y, num_classes=num_classes)   # Converts a class vector (integers) to binary class matrix.
 
+
+#============================#
+#          Training          #
+#============================#
+epochs = 5
 
 ### For TensorBoard
 tb_callback = keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
@@ -117,7 +122,7 @@ callbacks = [tb_callback]
 ###
 
 
-model.fit(x, y, batch_size=32, epochs=10, validation_split=0.2,
+model.fit(x, y, batch_size=32, epochs=epochs, validation_split=0.2,
              callbacks=callbacks ) # for TensorBoard
 
 model.save('trained_model.h5')
