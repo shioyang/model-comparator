@@ -5,6 +5,7 @@ test_*.jpg
 
 # Models
 *.h5
+tflog_back
 
 # Memo
 memo.txt
