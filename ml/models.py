@@ -16,8 +16,9 @@ num_classes = 2
 
 ### input image dimensions
 img_rows, img_cols = 128, 128
-input_shape = (img_rows, img_cols, 3)
-# input_shape = (3, img_rows, img_cols)
+rgb = 3
+input_shape = (img_rows, img_cols, rgb)   # data format: channels last
+# input_shape = (rgb, img_rows, img_cols)   # data format: channels first
 
 data_dir = 'data'
 
@@ -38,17 +39,17 @@ def create_model():
     model = Sequential()
 
     # input: (img_rows x img_cols) images with 3 channels -> (img_rows, img_cols, 3) tensors.
-    # this applies 32 convolution filters of size 3x3 each.
+    # This applies 32 convolution filters of size 3x3 each.
     model.add( Conv2D(32, kernel_size=(3, 3),               # Output Shape           Param #
                   activation='relu',                        # -------------------------------
                   input_shape=input_shape) )                # (None, 126, 126, 32)       896
     model.add( Conv2D(64, (3, 3), activation='relu') )      # (None, 124, 124, 64)     18496
     model.add( MaxPooling2D(pool_size=(2, 2)) )             # (None,  62,  62, 64)         0
     model.add( Dropout(0.25) )                              # (None,  62,  62, 64)         0
-    model.add( Flatten() )                                  # (None, 246016)               0
-    model.add( Dense(128, activation='relu') )              # (None,    128)        31490176
-    model.add( Dropout(0.5) )                               # (None,    128)               0
-    model.add( Dense(num_classes, activation='softmax') )   # (None,      2)             258
+    model.add( Flatten() )                                  # (None,       246016)         0
+    model.add( Dense(128, activation='relu') )              # (None,          128)  31490176
+    model.add( Dropout(0.5) )                               # (None,          128)         0
+    model.add( Dense(num_classes, activation='softmax') )   # (None,            2)       258
 
     model.compile(loss=keras.losses.categorical_crossentropy,
                     optimizer=keras.optimizers.Adadelta(),
