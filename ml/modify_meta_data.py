@@ -2,6 +2,9 @@ from os.path import isfile
 from scipy.io import loadmat, savemat
 import numpy as np
 
+###
+VERBOSE = False
+
 
 def load_label(data_path_file):
     meta = loadmat(data_path_file)
@@ -24,22 +27,55 @@ def load_img_label_asarray(data_dir, ext):
 
     name_list, full_path_list, gender_list, face_score_list, face_location_list, dob_list, photo_taken_list, second_face_score_list = load_label(data_dir + '/wiki.mat')
 
+    ### Count female and male
+    countFemale = 0
+    countMale = 0
+    for gender in gender_list:
+        if gender == 0:
+            countFemale += 1
+        if gender == 1:
+            countMale += 1
+    print('Data origin:')
+    print('   Female:', countFemale)
+    print('   Male  :', countMale)
+    count = min([countFemale, countMale])
+
+    countImgFemale = 0
+    countImgMale = 0
     for name, full_path, gender, face_score, second_face_score in zip(name_list, full_path_list, gender_list, face_location_list, second_face_score_list):
+        ### Ignore bad data
         if gender != 0 and gender != 1:
-            print('Pass gender NaN:', full_path[0])
+            if VERBOSE:
+                print('Pass gender NaN:', full_path[0])
             continue
         if not np.isnan(second_face_score):
-            print('Pass second face score not NaN:', full_path[0])
+            if VERBOSE:
+                print('Pass second face score not NaN:', full_path[0])
             continue
         if not isfile(data_dir + '/' + full_path[0].strip()):
-            print('Pass not exist:', full_path[0])
+            if VERBOSE:
+                print('Pass not exist:', full_path[0])
             continue
         # if face_score > 1.0:
         #     continue
+
+        ### 
+        if gender == 0:
+            if countImgFemale >= count:
+                continue
+            countImgFemale += 1
+        if gender == 1:
+            if countImgMale >= count:
+                continue
+            countImgMale += 1
+
         full_paths.append( full_path[0] )
         genders.append( gender )
 
     savemat('modified_wiki.mat', { "full_path": np.array(full_paths), "gender": np.array(genders) })
+    print('Data saved:')
+    print('   Female:', countImgFemale)
+    print('   Male  :', countImgMale)
 
 
 ### Modify wiki.mat and create a modified mat file. TODO: Change the function name
