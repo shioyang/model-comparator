@@ -23,6 +23,8 @@ print('### Loading img:', img_path)
 img = load_img(img_path, target_size=(img_rows, img_cols))
 img_arr = img_to_array(img)
 img_array = np.array([img_arr])
+img_array = img_array.astype('float32')
+img_array /= 255
 
 
 print('')
