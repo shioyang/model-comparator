@@ -94,10 +94,8 @@ model = create_model()
 model.summary()
 
 x, y = load_data('modified_wiki.mat')
-if debug and debug_verbose:
-    print('x:', x)
-    print('y:', y)
-
+x = x.astype('float32')
+x /= 255   # Normalize to values between 0..1
 
 #  ' while using as loss `categorical_crossentropy`. '
 # ValueError: You are passing a target array of shape (102, 1) while using as loss `categorical_crossentropy`. `categorical_crossentropy` expects targets
@@ -110,11 +108,16 @@ if debug and debug_verbose:
 # Alternatively, you can use the loss function `sparse_categorical_crossentropy` instead, which does expect integer targets.
 y = to_categorical(y, num_classes=num_classes)   # Converts a class vector (integers) to binary class matrix.
 
+if debug and debug_verbose:
+    print('x:', x)
+    print('y:', y)
+
 
 #============================#
 #          Training          #
 #============================#
 epochs = 5
+
 
 ### For TensorBoard
 tb_callback = keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
