@@ -2,6 +2,7 @@
 data
 data2
 test_*.jpg
+test_*.jpeg
 
 # Models
 *.h5
