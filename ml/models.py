@@ -8,11 +8,9 @@ from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.utils.np_utils import to_categorical
 
-debug = True
-debug_roop = 2000
-debug_verbose = False
-
-num_classes = 2
+### For debug
+DEBUG = False
+DEBUG_VERBOSE = False   # Ignore, if DEBUG is False
 
 ### input image dimensions
 img_rows, img_cols = 128, 128
@@ -20,7 +18,9 @@ rgb = 3
 input_shape = (img_rows, img_cols, rgb)   # data format: channels last
 # input_shape = (rgb, img_rows, img_cols)   # data format: channels first
 
-data_dir = 'data'
+DATA_DIR = 'data'
+DATA_COUNT = 2000
+num_classes = 2
 
 
 ### For TensorBoard
@@ -62,20 +62,13 @@ def create_model():
     return model
 
 
-def load_data(mat_file_dir):
-    x_img = []
-    y_gender = []
-
-    meta = loadmat(mat_file_dir)
-    img_paths = meta["full_path"]
-    genders   = meta["gender"]
- 
+def appendImg(img_paths, genders, count, x_img, y_gender):
     for i, path in enumerate(img_paths):
-        if debug and debug_verbose:
+        if DEBUG and DEBUG_VERBOSE:
             print('i:', i)
 
-        absPath = data_dir + '/' + path.strip()
-        if debug and debug_verbose:
+        absPath = DATA_DIR + '/' + path.strip()
+        if DEBUG and DEBUG_VERBOSE:
             print('loading:', absPath)
             print('gender:', genders[0][i])
 
@@ -84,16 +77,34 @@ def load_data(mat_file_dir):
 
         y_gender.append( genders[0][i] )
 
-        if debug and (i > debug_roop):
+        if i > count:
             break
+
+
+def load_data(female_mat_file, male_mat_file):
+    female_meta = loadmat(female_mat_file)
+    male_meta   = loadmat(  male_mat_file)
+
+    female_img_paths = female_meta["full_path"]
+    female_genders   = female_meta["gender"]
+    male_img_paths = male_meta["full_path"]
+    male_genders   = male_meta["gender"]
+ 
+    x_img = []
+    y_gender = []
+    appendImg(female_img_paths, female_genders, DATA_COUNT / 2, x_img, y_gender)
+    appendImg(  male_img_paths,   male_genders, DATA_COUNT / 2, x_img, y_gender)
 
     return np.array(x_img), np.array(y_gender)
 
 
+#============================#
+#          Modeling          #
+#============================#
 model = create_model()
 model.summary()
 
-x, y = load_data('modified_wiki.mat')
+x, y = load_data('female_wiki.mat', 'male_wiki.mat')
 x = x.astype('float32')
 x /= 255   # Normalize to values between 0..1
 
@@ -108,15 +119,29 @@ x /= 255   # Normalize to values between 0..1
 # Alternatively, you can use the loss function `sparse_categorical_crossentropy` instead, which does expect integer targets.
 y = to_categorical(y, num_classes=num_classes)   # Converts a class vector (integers) to binary class matrix.
 
-if debug and debug_verbose:
+if DEBUG and DEBUG_VERBOSE:
     print('x:', x)
     print('y:', y)
+print('y:', y)
 
+if DEBUG:
+    countF = 0
+    countM = 0
+    for y0 in y:
+        if y0[0] == 1:
+            countF += 1
+        if y0[1] == 1:
+            countM += 1
+    print('data:', countF)
+    print('   Female:', countF)
+    print('   Male  :', countM)
+
+    exit()
 
 #============================#
 #          Training          #
 #============================#
-epochs = 5
+epochs = 10
 
 
 ### For TensorBoard
