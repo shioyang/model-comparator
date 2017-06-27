@@ -25,5 +25,9 @@ export class AppComponent {
     }
   ]
   selected_image = ''
+  result_text = ''
 
+  OnPredictClicked(): void {
+    this.result_text += '1'
+  }
 }

@@ -14,6 +14,12 @@
     <img src="{{selected_image}}" />
   </div>
 
-  <button md-raised-button [disabled]="selected_image == ''">Predict</button>
+  <button md-raised-button [disabled]="selected_image == ''" (click)="OnPredictClicked()">Predict</button>
+
+  <div class="resultArea">
+    <form>
+      <textarea [(ngModel)]="result_text" cols="100" rows="20" readonly placeholder="No Result" name="result_textarea"></textarea>
+    </form>
+  </div>
 
 </div>

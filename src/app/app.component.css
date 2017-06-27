@@ -5,3 +5,12 @@
 .selectedImage img {
   height: 150px;
 }
+
+.resultArea {
+  margin: 50px;
+}
+
+.resultArea textarea:focus {
+  outline: 0px;
+  -webkit-appearance: none;
+}
