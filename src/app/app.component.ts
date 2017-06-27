@@ -24,6 +24,6 @@ export class AppComponent {
       path: './ml/data_prediction/3_pred.jpg'
     }
   ]
-  showed_image = ''
+  selected_image = ''
 
 }

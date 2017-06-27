@@ -3,7 +3,7 @@
   <h1>Model Comparator</h1>
 
   <form class="imageSelection">
-    <md-select placeholder="Image for Prediction" [(ngModel)]="showed_image" required name="image_select" >
+    <md-select placeholder="Image for Prediction" [(ngModel)]="selected_image" required name="image_select" >
       <md-option *ngFor="let img of images" [value]="img.path" >
         {{img.name}}
       </md-option>
@@ -11,7 +11,9 @@
   </form>
 
   <div class="selectedImage">
-    <img src="{{showed_image}}" />
+    <img src="{{selected_image}}" />
   </div>
+
+  <button md-raised-button [disabled]="selected_image == ''">Predict</button>
 
 </div>

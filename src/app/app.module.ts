@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { MdSelectModule, MdOptionModule } from '@angular/material'
+import { MdSelectModule, MdOptionModule, MdButtonModule } from '@angular/material'
 
 import { AppComponent } from './app.component'
 
@@ -15,7 +15,8 @@ import { AppComponent } from './app.component'
     FormsModule,
     BrowserAnimationsModule,   // Animation module for Angular Material
     MdSelectModule,            // md-select
-    MdOptionModule             // md-option
+    MdOptionModule,            // md-option
+    MdButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,3 +1,7 @@
 .selectedImage {
   margin: 30px;
 }
+
+.selectedImage img {
+  height: 150px;
+}
