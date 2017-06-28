@@ -11,7 +11,7 @@ var cmd = require('node-cmd')
 
 router.get('/ml', function(req, res, next) {
   // Note: Activate TensorFlow before execute server.
-  var pyCommand = 'python ../../model-comparator/ml/predict.py -i ../../model-comparator/ml/test_Keira.jpg'
+  var pyCommand = 'cd ./src/ml && python predict.py -i data_prediction/2_pred.jpg'
 
   var pyProcess = cmd.get(pyCommand, function(data, err, stderr){
     if(!err){
