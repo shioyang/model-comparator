@@ -3,6 +3,11 @@ import argparse
 from keras.models import load_model
 from keras.preprocessing.image import load_img, img_to_array
 
+### Ignore tf warning: 'The TensorFlow library wasn't compiled to use...'
+### Ref: https://github.com/tensorflow/tensorflow/issues/7778
+# import os
+# os.environ['TF_CPP_MIN_LOG_LEVEL']='2'  # Ignore tf warning: 'The TensorFlow library wasn't compiled to use...'
+
 ### Configuration
 img_rows, img_cols = 128, 128
 model_dir = 'trained_model.h5'
