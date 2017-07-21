@@ -10,7 +10,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "client": "ng serve",
-    "server": "node ./bin/www"
+    "server": "node ./bin/www",
+    "py_server": "FLASK_APP=src/py_server/py_server.py flask run"
   },
   "private": true,
   "dependencies": {
