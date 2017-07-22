@@ -1,4 +1,5 @@
 import { Component } from '@angular/core'
+import { ServerService } from './server.service'
 
 @Component({
   selector: 'app-root',
@@ -27,7 +28,14 @@ export class AppComponent {
   selected_image = ''
   result_text = ''
 
+  constructor(private serverService: ServerService){}
+
   OnPredictClicked(): void {
-    this.result_text += '1'
+    let image_path = this.selected_image.substring(5);
+    console.log('image_path: ' + image_path)
+    this.serverService.predictImage(image_path)
+      .subscribe(result => {
+        this.result_text = result
+      })
   }
 }

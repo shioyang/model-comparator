@@ -66,10 +66,12 @@ router.get('/callpy', function(req, res, next){
 
 // http://localhost:3000/users/predict
 router.get('/predict', function(req, res, next){
+  let file_path = req.query.file_path
+  console.log(file_path)
   let param = {
     url:  'http://localhost:5000/ml',
     formData: {
-      file_path: 'data_prediction/2_pred.jpg' //temp
+      file_path: file_path
     }
   }
   request.post(param, function(error, response, body){
