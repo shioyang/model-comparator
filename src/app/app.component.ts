@@ -27,14 +27,17 @@ export class AppComponent {
   ]
   selected_image = ''
   result_text = ''
+  isShowSpinner = false
 
   constructor(private serverService: ServerService){}
 
   OnPredictClicked(): void {
     let image_path = this.selected_image.substring(5);
     console.log('image_path: ' + image_path)
+    this.isShowSpinner = true
     this.serverService.predictImage(image_path)
       .subscribe(result => {
+        this.isShowSpinner = false
         this.result_text = result
       })
   }
