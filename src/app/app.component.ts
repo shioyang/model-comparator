@@ -28,17 +28,39 @@ export class AppComponent {
   selected_image = ''
   result_text = ''
   isShowSpinner = false
+  isShowFemale = false
+  isShowMale = false
 
   constructor(private serverService: ServerService){}
 
   OnPredictClicked(): void {
     let image_path = this.selected_image.substring(5);
     console.log('image_path: ' + image_path)
+
     this.isShowSpinner = true
+    this.isShowFemale = false
+    this.isShowMale = false
+
     this.serverService.predictImage(image_path)
       .subscribe(result => {
         this.isShowSpinner = false
         this.result_text = result
+
+        if(this.isFemale(result)){
+          this.isShowSpinner = false
+          this.isShowFemale = true
+          this.isShowMale = false
+        }else{
+          // Male
+          this.isShowSpinner = false
+          this.isShowFemale = false
+          this.isShowMale = true
+        }
       })
   }
+
+  isFemale(result_json){
+    return (result_json.female > 50)
+  }
+
 }

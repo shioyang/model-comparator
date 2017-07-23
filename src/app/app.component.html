@@ -16,14 +16,10 @@
 
   <button md-raised-button [disabled]="selected_image == ''" (click)="OnPredictClicked()">Predict</button>
 
-  <div>
-    <i *ngIf="isShowSpinner" class="icon-spinner icon-spin icon-large"></i>
-  </div>
-
   <div class="resultArea">
-    <form>
-      <textarea [(ngModel)]="result_text" cols="100" rows="20" readonly placeholder="No Result" name="result_textarea"></textarea>
-    </form>
+    <i *ngIf="isShowSpinner" class="icon-spinner icon-spin icon-large"></i>
+    <img *ngIf="isShowFemale" src="./assets/female.png" />
+    <img *ngIf="isShowMale" src="./assets/male.png" />
   </div>
 
 </div>
