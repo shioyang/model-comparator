@@ -10,8 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "client": "ng serve --proxy-config proxy.config.json",
-    "server": "node ./bin/www",
-    "py_server": "FLASK_APP=src/ml/py_server.py flask run"
+    "server": "node ./bin/www"
   },
   "private": true,
   "dependencies": {
