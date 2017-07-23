@@ -15,8 +15,9 @@ export class ServerService {
     searchParams.set('file_path', './' + image_path);
     return this.http.get(this.baseUrl + '/predict', { search: searchParams })
         .map(res => {
-            return res
-            // return res.json()
+            console.log('res:')
+            console.log(res.json())
+            return res.json()
         })
   }
 

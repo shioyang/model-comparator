@@ -51,7 +51,24 @@ router.get('/ml2', function(req, res, next) {
       res.send('Success: ' + results)
     }
   })
-  
+})
+
+
+// http://localhost:3000/users/predict
+router.get('/predict', function(req, res, next) {
+  let file_path = req.query.file_path
+
+  var spawn = require("child_process").spawn;
+  var process = spawn('python', ["src/ml/predict.py", '-i', file_path]);
+  process.stdout.setEncoding('utf8');
+  console.log('spawned')
+
+  process.stdout.on('data', function (data){
+    var lines = data.split("\n");
+    var result = lines[lines.length - 2]
+    console.log('result: ' + result)
+    res.send(result)
+  });
 })
 
 
@@ -64,8 +81,8 @@ router.get('/callpy', function(req, res, next){
   })
 })
 
-// http://localhost:3000/users/predict
-router.get('/predict', function(req, res, next){
+// http://localhost:3000/users/predict_old
+router.get('/predict_old', function(req, res, next){
   let file_path = req.query.file_path
   console.log(file_path)
   let param = {
