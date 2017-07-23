@@ -17,8 +17,11 @@
 
   <div class="resultArea">
     <i *ngIf="isShowSpinner" class="icon-spinner icon-spin icon-large"></i>
-    <img *ngIf="isShowFemale" src="./assets/female.png" height="256" width="256" />
+    <img *ngIf="isShowFemale" src="./assets/female.png" height="256" width="256" style="margin-bottom: 20px;" />
     <img *ngIf="isShowMale"   src="./assets/male.png"   height="256" width="256" />
+
+    <div *ngIf="isShowFemale || isShowMale"><span>Female: {{result_female}}%</span></div>
+    <div *ngIf="isShowFemale || isShowMale"><span>Male: {{result_male}}%</span></div>
   </div>
 
 </div>
