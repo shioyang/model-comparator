@@ -1,5 +1,5 @@
 <div style="text-align:center">
-  <h1>Model Comparator</h1>
+  <h1>Gender Prediction</h1>
 
   <form class="imageSelection">
     <md-select placeholder="Image for Prediction" [(ngModel)]="selected_image" required name="image_select" >
@@ -13,7 +13,7 @@
     <img src="{{selected_image}}" />
   </div>
 
-  <button md-raised-button [disabled]="selected_image == ''" (click)="OnPredictClicked()">Predict</button>
+  <button md-raised-button [disabled]="selected_image == '' || isShowSpinner == true" (click)="OnPredictClicked()">Predict</button>
 
   <div class="resultArea">
     <i *ngIf="isShowSpinner" class="icon-spinner icon-spin icon-large"></i>
