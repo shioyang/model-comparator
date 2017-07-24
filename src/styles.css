@@ -2,3 +2,7 @@
 
 /* Theme for Angular Material */
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+body {
+  margin: 50px;
+}
