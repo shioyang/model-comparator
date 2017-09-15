@@ -34,7 +34,7 @@ tensorflow_backend.set_learning_phase(1)
 ###
 
 
-def create_model():
+def create_model01():
 
     model = Sequential()
 
@@ -58,6 +58,36 @@ def create_model():
     # model.compile(loss='categorical_crossentropy',
     #           optimizer='adam',
     #           metrics=['accuracy'])
+
+    return model
+
+
+from keras.applications.vgg16 import VGG16
+from keras.layers import Input
+from keras.models import Model
+from keras import optimizers
+
+def create_model02(nb_label):
+    # Make tensor
+    input_tensor = Input(shape=input_shape)
+
+    # Assign input_tensor, because output_shape becomes None without it.
+    vgg16_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
+
+    top_model = Sequential()
+    top_model.add( Flatten(input_shape=vgg16_model.output_shape[1:]) )
+    top_model.add( Dense(256, activation='relu') )
+    top_model.add( Dropout(0.5) )
+    top_model.add( Dense(nb_label, activation='softmax') )
+
+    # Connect vgg16 and top_model
+    model = Model(input=vgg16_model.input, output=top_model(vgg16_model.output))
+
+    # Freeze layers which are just before last convolution layer.
+    for layer in model.layers[:15]:
+        layer.trainable = False
+
+    model.compile(loss='categorical_crossentropy', optimizer=optimizers.SGD(lr=1e-4, momentum=0.9), metrics=['accuracy'])
 
     return model
 
@@ -101,7 +131,8 @@ def load_data(female_mat_file, male_mat_file):
 #============================#
 #          Modeling          #
 #============================#
-model = create_model()
+# model = create_model01()
+model = create_model02(num_classes)
 model.summary()
 
 x, y = load_data('female_wiki.mat', 'male_wiki.mat')
@@ -141,7 +172,7 @@ if DEBUG:
 #============================#
 #          Training          #
 #============================#
-epochs = 10
+epochs = 50
 
 
 ### For TensorBoard
