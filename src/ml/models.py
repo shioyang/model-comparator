@@ -7,10 +7,13 @@ from keras.layers import Activation
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.utils.np_utils import to_categorical
+from keras.preprocessing.image import ImageDataGenerator
 
 ### For debug
 DEBUG = False
 DEBUG_VERBOSE = False   # Ignore, if DEBUG is False
+
+AUGMENTATION = True
 
 ### input image dimensions
 img_rows, img_cols = 128, 128
@@ -169,20 +172,79 @@ if DEBUG:
 
     exit()
 
+
+#============================#
+#        Preparation         #
+#============================#
+if AUGMENTATION:
+    data_gen = ImageDataGenerator(
+        featurewise_center=False,             # Set input mean to 0 over the dataset, feature-wise.
+        samplewise_center=False,              # Set each sample mean to 0.
+        featurewise_std_normalization=False,  # Divide inputs by std of the dataset, feature-wise.
+        samplewise_std_normalization=False,   # Divide each input by its std.
+        zca_whitening=False,                  # Apply ZCA whitening.
+        rotation_range=10,                    # Int. Degree range for random rotations.
+        width_shift_range=0.3,                # Float (fraction of total width). Range for random horizontal shifts.
+        height_shift_range=0.2,               # Float (fraction of total height). Range for random vertical shifts.
+        horizontal_flip=True,                 # Randomly flip inputs horizontally.
+        vertical_flip=False,                  # Randomly flip inputs vertically.
+        # -----
+        # zca_epsilon=1e-6,                     # epsilon for ZCA whitening. Default is 1e-6.
+        shear_range=0.,                       # Float. Shear Intensity (Shear angle in counter-clockwise direction as radians)
+        zoom_range=0.2,                       # Float or [lower, upper]. Range for random zoom.
+                                              # If a float,  [lower, upper] = [1-zoom_range, 1+zoom_range].
+        channel_shift_range=0.,               # Float. Range for random channel shifts.
+        fill_mode='nearest',                  # One of {"constant", "nearest", "reflect" or "wrap"}.
+                                              # Points outside the boundaries of the input are filled according to the given mode.
+        cval=0.,                              # Float or Int. Value used for points outside the boundaries when fill_mode = "constant".
+        rescale=None,                         # rescaling factor. Defaults to None. If None or 0, no rescaling is applied,
+                                              # otherwise we multiply the data by the value provided (before applying any other transformation).
+        preprocessing_function=None           # function that will be implied on each input. The function will run before any other modification on it.
+                                              # The function should take one argument: one image (Numpy tensor with rank 3), and should output a Numpy tensor with the same shape.
+    )
+
+    # Split data to train and test
+    #   train : test = 8 : 2
+    num_split = int(round((len(x) / 10) * 8))
+
+    x_train = x[ :num_split]
+    y_train = y[ :num_split]
+    x_test  = x[num_split: ]
+    y_test  = y[num_split: ]
+
+    # Need for featurewise_center, featurewise_std_normalization, and zca_whitening
+    data_gen.fit(x_train)
+
+
 #============================#
 #          Training          #
 #============================#
 epochs = 50
+batch_size = 32
 
 
 ### For TensorBoard
-tb_callback = keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+# tb_callback = keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+tb_callback = keras.callbacks.TensorBoard(log_dir=log_dir) # Histogram off, because not support when using generator.
 callbacks = [tb_callback]
 ###
 
 
-model.fit(x, y, batch_size=32, epochs=epochs, validation_split=0.2,
-             callbacks=callbacks ) # for TensorBoard
+if AUGMENTATION:
+    model.fit_generator(
+        data_gen.flow(x_train, y_train, batch_size=batch_size),
+        steps_per_epoch=x_train.shape[0],
+        # samples_per_epoch=x_train.shape[0],
+        epochs=epochs,
+        # nb_epoch=epochs,
+        validation_data=data_gen.flow(x_test, y_test),
+        validation_steps=x_test.shape[0],
+        # nb_val_samples=x_test.shape[0],
+        callbacks=callbacks
+    )
+else:
+    model.fit(x, y, batch_size=batch_size, epochs=epochs, validation_split=0.2,
+                 callbacks=callbacks ) # for TensorBoard
 
 model.save('trained_model.h5')
 
